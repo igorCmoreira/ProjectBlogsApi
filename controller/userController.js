@@ -35,6 +35,9 @@ router.get('/user/:id', authToken, async (req, res, next) => {
   try {
    const { id } = req.params;
    const users = await User.findByPk(id);
+   if (!users) {
+     return res.status(404).send({ message: 'User does not exist' });
+   }
    return res.status(200).send(users);
  } catch (e) {
    next(e);

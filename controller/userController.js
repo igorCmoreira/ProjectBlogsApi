@@ -1,6 +1,7 @@
 const express = require('express');
 const { verificaEmail, verificaName, verificaPassword } = require('../middleware/userValidation');
 const { verificaEmailUnico } = require('../services/seviceUser');
+const { authToken } = require('../middleware/auth');
 const { User } = require('../models/index.js');
 
 const router = express.Router();
@@ -21,7 +22,7 @@ router.post('/user', verificaEmail, verificaName, verificaPassword, async (req, 
   }
 });
 
-router.get('/', async (req, res, next) => {
+router.get('/user', authToken, async (req, res, next) => {
    try {
     const users = await User.findAll();
     return res.status(200).send(users);
@@ -30,7 +31,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/user/:id', async (req, res, next) => {
+router.get('/user/:id', authToken, async (req, res, next) => {
   try {
    const { id } = req.params;
    const users = await User.findByPk(id);

@@ -1,5 +1,5 @@
 const express = require('express');
-const { verificaEmail, verificaName, verificaPassword } = require('../middleware/usersValidations');
+const { verificaEmail, verificaName, verificaPassword } = require('../middleware/userValidation');
 const { verificaEmailUnico } = require('../services/seviceUser');
 const { User } = require('../models/index.js');
 
@@ -28,5 +28,15 @@ router.get('/', async (req, res, next) => {
   } catch (e) {
     next(e);
   }
+});
+
+router.get('/user/:id', async (req, res, next) => {
+  try {
+   const { id } = req.params;
+   const users = await User.findByPk(id);
+   return res.status(200).send(users);
+ } catch (e) {
+   next(e);
+ }
 });
 module.exports = router;

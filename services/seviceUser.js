@@ -1,16 +1,22 @@
 const { User } = require('../models/index');
 
-const verificaEmailUnico = async (req) => {
-  const { email } = req.body;
+const { genAuthToken } = require('./auth');
+
+const existingUser = async (email) => {
   const users = await User.findAll();
   const found = users.find((user) => user.email === email);
-  console.log(found);
+  return found;
+};
+const verificaEmailUnico = async (req) => {
+  const { email } = req.body;
+  const found = await existingUser(email);
   if (!found) {
-    return { code: 201, token: '111222' };
+    const token = genAuthToken(email);
+    return { code: 201, token };
   }
   return { code: 409, message: 'User already registered' };
 };
-
 module.exports = {
   verificaEmailUnico,
+  existingUser,
 };

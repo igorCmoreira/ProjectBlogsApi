@@ -14,7 +14,7 @@ router.post('/categories', nameVerify, authToken, async (req, res, next) => {
     next(e);
   }
 });
-router.get('/categories', nameVerify, authToken, async (req, res, next) => {
+router.get('/categories', authToken, async (req, res, next) => {
   try {
     const category = await Categories.findAll();
     return res.status(200).send(category);

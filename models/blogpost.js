@@ -5,6 +5,7 @@ const blogPost = (sequelize, DataTypes) => {
     content: DataTypes.STRING,
     userId: { type: DataTypes.INTEGER, foreignkey: true },
   }, {
+    timestamps: false,
     tableName: 'BlogPosts',
   });
   BlogPost.associate = (models) => {

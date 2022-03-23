@@ -3,6 +3,7 @@ const { Categories } = require('../models/index');
 
 const { authToken } = require('../middleware/auth');
 const { nameVerify } = require('../middleware/categoriesValidation');
+
 const router = express.Router();
 
 router.post('/categories', nameVerify, authToken, async (req, res, next) => {

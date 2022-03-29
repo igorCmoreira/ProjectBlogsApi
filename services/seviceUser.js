@@ -1,6 +1,6 @@
 const { User } = require('../models/index');
 
-const { genAuthToken } = require('./auth');
+const { genAuthToken, verifyToken } = require('./auth');
 
 const existingUser = async (email) => {
   const users = await User.findAll();
@@ -21,10 +21,16 @@ const create = async (displayName, email, password) => User.create(
 );
 const findAll = async () => User.findAll();
 const findById = async (id) => User.findByPk(id);
+const deleteMe = async (token) => {
+  const email = verifyToken(token);
+  const user = await existingUser(email);
+  return user.destroy();
+};
 module.exports = {
   verificaEmailUnico,
   existingUser,
   create,
   findAll,
   findById,
+  deleteMe,
 };

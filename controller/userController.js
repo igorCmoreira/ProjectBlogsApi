@@ -1,6 +1,6 @@
 const express = require('express');
 const { verificaEmail, verificaName, verificaPassword } = require('../middleware/userValidation');
-const { verificaEmailUnico, create, findAll, findById } = require('../services/seviceUser');
+const { verificaEmailUnico, create, findAll, findById, deleteMe } = require('../services/seviceUser');
 const { authToken } = require('../middleware/auth');
 
 const router = express.Router();
@@ -41,5 +41,14 @@ router.get('/user/:id', authToken, async (req, res, next) => {
  } catch (e) {
    next(e);
  }
+});
+router.delete('/user/me', authToken, async (req, res, next) => {
+  try {
+    const { authorization } = req.headers; 
+  await deleteMe(authorization);
+  return res.status(204).end();
+  } catch (e) {
+    next(e);
+  }
 });
 module.exports = router;

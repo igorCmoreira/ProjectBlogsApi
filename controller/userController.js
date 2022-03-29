@@ -1,8 +1,7 @@
 const express = require('express');
 const { verificaEmail, verificaName, verificaPassword } = require('../middleware/userValidation');
-const { verificaEmailUnico } = require('../services/seviceUser');
+const { verificaEmailUnico, create, findAll, findById } = require('../services/seviceUser');
 const { authToken } = require('../middleware/auth');
-const { User } = require('../models/index.js');
 
 const router = express.Router();
 
@@ -15,7 +14,7 @@ router.post('/user', verificaEmail, verificaName, verificaPassword, async (req, 
       return res.status(code).send({ message });
     }
     const { token } = await verificaEmailUnico(req);
-     await User.create({ displayName, email, password });
+     await create({ displayName, email, password });
     return res.status(201).send({ token });
   } catch (e) {
     next(e);
@@ -24,7 +23,7 @@ router.post('/user', verificaEmail, verificaName, verificaPassword, async (req, 
 
 router.get('/user', authToken, async (req, res, next) => {
    try {
-    const users = await User.findAll();
+    const users = await findAll();
     return res.status(200).send(users);
   } catch (e) {
     next(e);
@@ -34,7 +33,7 @@ router.get('/user', authToken, async (req, res, next) => {
 router.get('/user/:id', authToken, async (req, res, next) => {
   try {
    const { id } = req.params;
-   const users = await User.findByPk(id);
+   const users = await findById(id);
    if (!users) {
      return res.status(404).send({ message: 'User does not exist' });
    }

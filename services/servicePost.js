@@ -1,4 +1,4 @@
-const { BlogPosts, Categories } = require('../models/index');
+const { BlogPosts, Categories, User } = require('../models/index');
 const { verifyToken } = require('./auth');
 const { existingUser } = require('./seviceUser');
 
@@ -19,5 +19,15 @@ const createPost = async (post, token) => {
 await postBlog.addCategories(categories);
   return postBlog;
 };
+const findAll = async () => BlogPosts.findAll({
+    include: [
+      { model: User, as: 'user' },
+      { model: Categories, as: 'categories', through: { attributes: [] } }],
+  });
+const findById = async (id) => BlogPosts.findByPk(id, {
+  include: [
+    { model: User, as: 'user' },
+    { model: Categories, as: 'categories', through: { attributes: [] } }],
+});
 
-module.exports = { createPost };
+module.exports = { createPost, findAll, findById };

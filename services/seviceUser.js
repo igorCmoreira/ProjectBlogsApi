@@ -16,7 +16,15 @@ const verificaEmailUnico = async (req) => {
   }
   return { code: 409, message: 'User already registered' };
 };
+const create = async (displayName, email, password) => User.create(
+  { displayName, email, password },
+);
+const findAll = async () => User.findAll();
+const findById = async (id) => User.findByPk(id);
 module.exports = {
   verificaEmailUnico,
   existingUser,
+  create,
+  findAll,
+  findById,
 };

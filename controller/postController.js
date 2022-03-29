@@ -1,11 +1,10 @@
 const express = require('express');
-const { BlogPosts, User, Categories } = require('../models/index');
 const { authToken } = require('../middleware/auth');
 const { titleValidation,
         contentValidation,
         categoryIdValidation } = require('../middleware/postValidation');
 
-const { createPost } = require('../services/servicePost');
+const { createPost, findAll, findById } = require('../services/servicePost');
 
 const router = express.Router();
 
@@ -21,12 +20,20 @@ router.post('/post', authToken, titleValidation, contentValidation,
 });
 router.get('/post', authToken, async (req, res, next) => {
   try {
-    const posts = await BlogPosts.findAll({
-      include: [
-        { model: User, as: 'user' },
-        { model: Categories, as: 'categories', through: { attributes: [] } }],
-    });
+    const posts = await findAll();
     return res.status(200).json(posts);
+  } catch (e) {
+    next(e);
+  }
+});
+router.get('/post/:id', authToken, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const post = await findById(id);
+    if (!post) {
+      return res.status(404).send({ message: 'Post does not exist' });
+    }
+    return res.status(200).json(post);
   } catch (e) {
     next(e);
   }

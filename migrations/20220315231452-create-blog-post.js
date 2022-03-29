@@ -26,18 +26,15 @@ module.exports = {
           model: 'Users',
           key: 'id',
         }
-
       },
       published: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         field: 'published'
       },
       updated: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         field: 'updated'
       }
     });

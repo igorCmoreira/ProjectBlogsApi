@@ -3,9 +3,9 @@ const { authToken } = require('../middleware/auth');
 const { titleValidation,
         contentValidation,
         categoryIdValidation } = require('../middleware/postValidation');
-const { catVerify, authorVerify } = require('../middleware/updateValidation');
+const { catVerify, authorVerify } = require('../middleware/updateAndDeleteValidation');
 
-const { createPost, findAll, findById, update } = require('../services/servicePost');
+const { createPost, findAll, findById, update, del } = require('../services/servicePost');
 
 const router = express.Router();
 
@@ -47,6 +47,16 @@ contentValidation, catVerify, authorVerify, async (req, res, next) => {
     const post = await findById(id);
     const updated = await update(title, content, post);
     return res.status(200).json(updated);
+  } catch (e) {
+    next(e);
+  }
+});
+router.delete('/post/:id', authToken, authorVerify, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const post = await findById(id);
+    await del(post);
+    return res.status(204).end();
   } catch (e) {
     next(e);
   }

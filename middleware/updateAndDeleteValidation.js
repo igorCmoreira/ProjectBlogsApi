@@ -8,6 +8,9 @@ const authorVerify = async (req, res, next) => {
   const user = await existingUser(email);
   const { id } = req.params;
   const post = await findById(id);
+  if (!post) {
+    return res.status(404).send({ message: 'Post does not exist' });
+  }
   if (user.id !== post.userId) {
     return res.status(401).send({ message: 'Unauthorized user' });
   }

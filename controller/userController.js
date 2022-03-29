@@ -1,6 +1,9 @@
 const express = require('express');
 const { verificaEmail, verificaName, verificaPassword } = require('../middleware/userValidation');
-const { verificaEmailUnico, create, findAll, findById, deleteMe } = require('../services/seviceUser');
+const { verificaEmailUnico,
+   create, 
+   findAll, 
+   findById, deleteMe } = require('../services/seviceUser');
 const { authToken } = require('../middleware/auth');
 
 const router = express.Router();

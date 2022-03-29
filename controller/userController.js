@@ -14,7 +14,7 @@ router.post('/user', verificaEmail, verificaName, verificaPassword, async (req, 
       return res.status(code).send({ message });
     }
     const { token } = await verificaEmailUnico(req);
-     await create({ displayName, email, password });
+     await create(displayName, email, password);
     return res.status(201).send({ token });
   } catch (e) {
     next(e);

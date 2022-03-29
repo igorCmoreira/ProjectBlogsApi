@@ -3,8 +3,9 @@ const { authToken } = require('../middleware/auth');
 const { titleValidation,
         contentValidation,
         categoryIdValidation } = require('../middleware/postValidation');
+const { catVerify, authorVerify } = require('../middleware/updateValidation');
 
-const { createPost, findAll, findById } = require('../services/servicePost');
+const { createPost, findAll, findById, update } = require('../services/servicePost');
 
 const router = express.Router();
 
@@ -34,6 +35,18 @@ router.get('/post/:id', authToken, async (req, res, next) => {
       return res.status(404).send({ message: 'Post does not exist' });
     }
     return res.status(200).json(post);
+  } catch (e) {
+    next(e);
+  }
+});
+router.put('/post/:id', authToken, titleValidation,
+contentValidation, catVerify, authorVerify, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { title, content } = req.body;
+    const post = await findById(id);
+    const updated = await update(title, content, post);
+    return res.status(200).json(updated);
   } catch (e) {
     next(e);
   }

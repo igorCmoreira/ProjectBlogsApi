@@ -1,4 +1,4 @@
-const { verifycategory } = require('../services/servicePost');
+const { Categories } = require('../models/index');
 
 const titleValidation = (req, res, next) => {
   const { title } = req.body;
@@ -19,12 +19,13 @@ const categoryIdValidation = async (req, res, next) => {
   if (!categoryIds) {
     return res.status(400).send({ message: '"categoryIds" is required' });
   }
-  const categories = await verifycategory(categoryIds);
-for (let i = 0; i < categories.length; i += 1) {
-  if (!categories[i]) {
+  const categories = await Categories.findAll({ where: {
+    id: categoryIds,
+  } });
+
+  if (categories.length !== categoryIds.length) {
     return res.status(400).send({ message: '"categoryIds" not found' });
   }
-}
   next();
 };
 

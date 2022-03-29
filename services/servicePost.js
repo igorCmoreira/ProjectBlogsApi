@@ -1,14 +1,9 @@
-const { Categories, BlogPosts } = require('../models/index');
+const { BlogPosts, Categories } = require('../models/index');
 const { verifyToken } = require('./auth');
 const { existingUser } = require('./seviceUser');
 
-const verifycategory = async (categories) => {
-  const results = [];
-  categories.map((cat) => results.push(Categories.findByPk(cat)));
-  return Promise.all(results);
-};
 const createPost = async (post, token) => {
-  const { title, content, categoriesIds } = post;
+  const { title, content, categoryIds } = post;
   const email = await verifyToken(token);
   const user = await existingUser(email);
 
@@ -16,10 +11,13 @@ const createPost = async (post, token) => {
     title,
     content,
     userId: user.id,
-    categoriesIds,
   };
-
-  return BlogPosts.create(completePost);
+  const postBlog = await BlogPosts.create(completePost);
+  const categories = await Categories.findAll({ where: {
+    id: categoryIds,
+  } });
+await postBlog.addCategories(categories);
+  return postBlog;
 };
 
-module.exports = { verifycategory, createPost };
+module.exports = { createPost };
